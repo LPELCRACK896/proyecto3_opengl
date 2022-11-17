@@ -46,3 +46,93 @@ void main()
 
 }
 '''
+
+toon_frag_shadder ='''
+#version 450 core
+
+out vec4 fragColor;
+
+in vec2 UVs;
+in vec3 norms;
+in vec3 pos;
+
+uniform vec3 pointLight;
+uniform sampler2D tex;
+
+void main()
+{
+    float intensity = dot(norms, normalize(pointLight - pos));
+    float toonIntensity = (intensity < 0.3)? 0.1 : (intensity < 0.6) ? 0.5 : (intensity < 0.9) ? 0.8: 1;
+    fragColor = texture(tex, UVs) * toonIntensity;
+}
+'''
+
+gray_scale_frag ='''
+#version 450 core
+out vec4 fragColor;
+in vec2 UVs;
+in vec3 norms;
+in vec3 pos;
+uniform vec3 pointLight;
+uniform sampler2D tex;
+uniform float explodeColor;
+void main()
+{
+    float intensity = dot(norms, normalize(pointLight - pos));
+    fragColor = texture(tex, UVs) * intensity;
+    float average = (fragColor.x+fragColor.y+fragColor.z)/3;
+    fragColor = vec4(average, average, average, 1.0); 
+}
+'''
+
+red_scale_frag ='''
+#version 450 core
+out vec4 fragColor;
+in vec2 UVs;
+in vec3 norms;
+in vec3 pos;
+uniform vec3 pointLight;
+uniform sampler2D tex;
+uniform float explodeColor;
+void main()
+{
+    float intensity = dot(norms, normalize(pointLight - pos));
+    fragColor = texture(tex, UVs) * intensity;
+    float average = (fragColor.x+fragColor.y+fragColor.z)/3;
+    fragColor = vec4(average, 0, 0, 1.0); 
+}
+'''
+green_scale_frag ='''
+#version 450 core
+out vec4 fragColor;
+in vec2 UVs;
+in vec3 norms;
+in vec3 pos;
+uniform vec3 pointLight;
+uniform sampler2D tex;
+uniform float explodeColor;
+void main()
+{
+    float intensity = dot(norms, normalize(pointLight - pos));
+    fragColor = texture(tex, UVs) * intensity;
+    float average = (fragColor.x+fragColor.y+fragColor.z)/3;
+    fragColor = vec4(0, average, 0, 1.0); 
+}
+'''
+blue_scale_frag ='''
+#version 450 core
+out vec4 fragColor;
+in vec2 UVs;
+in vec3 norms;
+in vec3 pos;
+uniform vec3 pointLight;
+uniform sampler2D tex;
+uniform float explodeColor;
+void main()
+{
+    float intensity = dot(norms, normalize(pointLight - pos));
+    fragColor = texture(tex, UVs) * intensity;
+    float average = (fragColor.x+fragColor.y+fragColor.z)/3;
+    fragColor = vec4(0, 0, average, 1.0); 
+}
+'''

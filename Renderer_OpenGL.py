@@ -41,7 +41,10 @@ ttk.Label(frm, text="Press F3 to show model barrel").grid(column=0, row=4)
 ttk.Label(frm, text="Press F4 to show model pumpkin").grid(column=0, row=5)
 ttk.Label(frm, text="Press F5 to show model tree").grid(column=0, row=6)
 ttk.Label(frm, text="Use O to zoom in into the model, and P to zoom out").grid(column=0, row=7)
-ttk.Button(frm, text="Go to scene", command=root.destroy).grid(column=0, row=8)
+ttk.Label(frm, text="Z to set basic shadder; X to set toonShader; C to set grayscale shadder").grid(column=0, row=8)
+ttk.Label(frm, text="V to set red scale shadder; B to set green scale Shadder; N to set blue scale shadder").grid(column=0, row=9)
+
+ttk.Button(frm, text="Go to scene", command=root.destroy).grid(column=0, row=10)
 root.mainloop()
 
 width = 960
@@ -57,7 +60,6 @@ clock = pygame.time.Clock()
 
 rend = Renderer(screen)
 
-rend.setShaders(vertex_shader, fragment_shader)
 
 face = Model("model.obj", 'model.bmp')
 barrel = Model('./models/barrel/barrel.obj','./models/barrel/poison_barrel_text.bmp' )
@@ -79,6 +81,17 @@ myObjects = [
 ]
 index_model = 0
 
+myShadders = [
+    (vertex_shader, fragment_shader),
+    (vertex_shader, toon_frag_shadder),
+    (vertex_shader, gray_scale_frag),
+    (vertex_shader, red_scale_frag),
+    (vertex_shader, green_scale_frag),
+    (vertex_shader, blue_scale_frag)
+]
+rend.setShaders(vertex_shader, fragment_shader)
+
+index_shadder = 0
 changeModel(rend, index_model, myObjects)
 
 isRunning = True
@@ -131,6 +144,13 @@ while isRunning:
         if not new_index == index_model:
             changeModel(rend, new_index, myObjects)
             index_model = new_index
+    elif keys[K_z] or keys[K_x] or keys[K_c] or keys[K_v] or keys[K_b] or keys[K_n]:
+        newindex = 0 if keys[K_z] else 1 if keys[K_x] else 2 if keys[K_c] else 3 if keys[K_v] else 4 if keys[K_b] else 5
+        if not newindex == index_shadder:
+            rend.setShaders(myShadders[newindex][0], myShadders[newindex][1])
+            index_shadder = newindex
+
+
 
     deltaTime = clock.tick(60) / 1000
     rend.time += deltaTime
